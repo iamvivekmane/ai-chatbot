@@ -10,7 +10,7 @@ env_path = Path(__file__).parent / ".env"
 load_dotenv(env_path, override=True)   
 
 API_KEY = load_dotenv('GEMINI_API_KEY')
-MODEL = "gemini-3.6-flash" 
+MODEL = "gemini-2.5-flash-lite" 
 
 client = genai.Client(api_key=API_KEY)
 # click the browser button to open the browser
@@ -27,44 +27,40 @@ def receivedLast(text):
 
 
 
-# while True:
+while True:
+    # move to start of the chat
+    pyautogui.moveTo(745,298)
+    # drag till end of the chat
+    pyautogui.dragTo(1850,1039,duration=1.0,button='left')
+    # copy the selected text to the clipboard
+    pyautogui.hotkey('ctrl','c')
+    # wait till the text gets copied to the clipboard
+    time.sleep(1)
+    # paste the text in the variable
+    chatHistory = pyperclip.paste()
+    # click at the starting position to deselect the selected text
+    pyautogui.click(745,298)
 
-
-# move to start of the chat
-pyautogui.moveTo(745,298)
-# drag till end of the chat
-pyautogui.dragTo(1850,1039,duration=1.0,button='left')
-# copy the selected text to the clipboard
-pyautogui.hotkey('ctrl','c')
-# wait till the text gets copied to the clipboard
-time.sleep(1)
-# paste the text in the variable
-text = pyperclip.paste()
-# click at the starting position to deselect the selected text
-pyautogui.click(745,298)
-
-
-completion = client.models.generate_content(
-    model=MODEL,
-    config=types.GenerateContentConfig(
+    if (receivedLast(chatHistory)):
+        completion = client.models.generate_content(
+        model=MODEL,
+        config=types.GenerateContentConfig(
         system_instruction="You are a person named naruto who speaks hindi as well as english. You are from India and you are also a coder. You analyze chat history and respond like yourself(naruto), Output should be next chat response like naruto",
-    ),
-    contents=text,
-)
-output = completion.text
+        ),
+        contents=chatHistory,
+        )
+        output = completion.text
 
-pyperclip.copy(output)
-
-# pyautogui.click(1268,1170)
-# time.sleep(1)
-
-pyautogui.click(967,1085)
-time.sleep(1)
+        pyperclip.copy(output)
 
 
-pyautogui.hotkey('ctrl','v')
-time.sleep(1)
+        pyautogui.click(967,1085)
+        time.sleep(1)
 
-pyautogui.press('Enter')
+
+        pyautogui.hotkey('ctrl','v')
+        time.sleep(1)
+
+        pyautogui.press('Enter')
 
 
