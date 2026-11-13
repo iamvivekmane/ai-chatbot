@@ -7,8 +7,6 @@ from dotenv import load_dotenv
 env_path = Path(__file__).parent / ".env"
 load_dotenv(env_path, override=True)   
 
-
-
 API_KEY = load_dotenv('GEMINI_API_KEY')
 MODEL = "gemini-3.6-flash" 
 
