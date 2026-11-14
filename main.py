@@ -8,11 +8,10 @@ from dotenv import load_dotenv
 
 env_path = Path(__file__).parent / ".env"
 load_dotenv(env_path, override=True)   
-
 API_KEY = load_dotenv('GEMINI_API_KEY')
-MODEL = "gemini-2.5-flash-lite" 
-
+MODEL = "gemini-3.5-flash" 
 client = genai.Client(api_key=API_KEY)
+
 # click the browser button to open the browser
 pyautogui.click(1268,1170)
 # wait till the browser opens
@@ -24,8 +23,6 @@ def receivedLast(text):
         return True
     else:
         return False
-
-
 
 while True:
     # move to start of the chat
@@ -41,7 +38,13 @@ while True:
     # click at the starting position to deselect the selected text
     pyautogui.click(745,298)
 
+    # generate reply only if the last message was sent by sender at other end
     if (receivedLast(chatHistory)):
+        # click on the input of the chat 
+        pyautogui.click(967,1085)
+        # wait till it clicks
+        time.sleep(1)
+
         completion = client.models.generate_content(
         model=MODEL,
         config=types.GenerateContentConfig(
@@ -50,17 +53,14 @@ while True:
         contents=chatHistory,
         )
         output = completion.text
-
+        
+        # copy the output of the api to the clipboard
         pyperclip.copy(output)
-
-
-        pyautogui.click(967,1085)
-        time.sleep(1)
-
-
+        # paste the output in the input of chat
         pyautogui.hotkey('ctrl','v')
+        # wait till it pastes the output 
         time.sleep(1)
-
+        # send the message
         pyautogui.press('Enter')
 
 
